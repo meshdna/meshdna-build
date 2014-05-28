@@ -9,12 +9,6 @@ set -ex
 
 CURIMG=stage5.$IMGFORMAT
 
-test_boot() {
-mount /boot
-ls /boot
-umount /boot
-}
-
 build_batman() {
   # we may want to break out DEBIAN_FRONTEND=noninteractive
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
