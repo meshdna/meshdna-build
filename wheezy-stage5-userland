@@ -22,7 +22,6 @@ make && make install
 cd ..
 rm -rf batman-adv-2014.2.0*
 # 
-apt-get install --yes libnl-3-dev
 wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
 tar -xvzf batctl-2014.2.0*
 cd batctl-2014.2.0
@@ -36,6 +35,13 @@ cd alfred-2014.2.0
 make && make install
 cd ..
 rm -rf alfred-2014.2.0* 
+EOF
+}
+
+# build some wireless drivers we would like to have
+build_rt5572sta() {
+  ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
+curl 
 EOF
 }
 

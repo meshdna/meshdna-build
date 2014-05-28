@@ -14,6 +14,7 @@ install_packages() {
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
 apt-get update
 apt-get install -y libgps-dev
+apt-get install -y libnl-3-dev 
 apt-get install -y gcc
 apt-get install -y bc
 apt-get install -y make
@@ -24,9 +25,11 @@ EOF
 build_kernel() {
 #git clone http://192.168.1.129/etc/meshnet/linux
   onvm_chroot sh -l -e - <<\EOF
+# ADD PROPER BRANCHING PLEASE
 git clone --depth 1 git://github.com/raspberrypi/linux.git
 cd linux
 make mrproper
+# EVIL INTERNAL IP ADDRESS CURL
 curl 192.168.1.129/etc/meshnet/config.gz | gunzip > .config
 make oldconfig
 make && make modules
