@@ -1,0 +1,62 @@
+#!/bin/sh
+# Part of spindle http://asbradbury.org/projects/spindle
+#
+# See LICENSE file for copyright and license details
+
+set -ex
+
+. ./common
+
+CURIMG=stage4.$IMGFORMAT
+
+install_packages() {
+  # we may want to break out DEBIAN_FRONTEND=noninteractive
+  ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
+apt-get update
+apt-get install -y libgps-dev
+apt-get install -y gcc
+apt-get install -y bc
+apt-get install -y make
+apt-get install -y git
+EOF
+}
+
+build_kernel() {
+#git clone http://192.168.1.129/etc/meshnet/linux
+  onvm_chroot sh -l -e - <<\EOF
+git clone --depth 1 git://github.com/raspberrypi/linux.git
+cd linux
+make mrproper
+curl 192.168.1.129/etc/meshnet/config.gz | gunzip > .config
+make oldconfig
+make && make modules
+cp arch/arm/boot/Image /boot/kernel.img
+make modules_install
+EOF
+}
+
+
+
+
+cd $WORKDIR
+dotask branch_image ../$OUTDIR/stage3.$IMGFORMAT $CURIMG
+dotask run_qemu $CURIMG
+dotask mount_apt_cache
+dotask disable_starting_services
+dotask install_packages
+dotask build_kernel
+dotask save_space_using_hardlink
+dotask allow_starting_services
+dotask update_issue
+dotask fingerprint_debian
+dotask shutdown_qemu
+# We have to copy the /boot from root partition to boot partition. Temporary
+# hack
+dotask attach_image_to_nbd $CURIMG $NBD_DEV
+mkdir -p boot
+dotask sudo mount $BOOT_DEV boot
+mkdir -p rootfs
+dotask sudo mount $ROOT_DEV rootfs
+dotask sudo mv rootfs/boot/kernel.img boot
+universal_cleanup
+dotask finish_image

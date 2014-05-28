@@ -1,0 +1,60 @@
+#!/bin/sh
+# Part of spindle http://asbradbury.org/projects/spindle
+#
+# See LICENSE file for copyright and license details
+
+set -ex
+
+. ./common
+
+CURIMG=stage5.$IMGFORMAT
+
+test_boot() {
+mount /boot
+ls /boot
+umount /boot
+}
+
+build_batman() {
+  # we may want to break out DEBIAN_FRONTEND=noninteractive
+  ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
+export KERNELPATH=/lib/modules/3.12.20+/build
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batman-adv-2014.2.0.tar.gz
+tar -xvzf batman-adv-2014.2.0.tar.gz
+cd batman-adv-2014.2.0
+# EVIL MAKEFILE PATCHING
+sed -i 's/depmod\ \-a/depmod 3.12.20\+/' Makefile
+make && make install
+cd ..
+rm -rf batman-adv-2014.2.0*
+# 
+apt-get install --yes libnl-3-dev
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
+tar -xvzf batctl-2014.2.0*
+cd batctl-2014.2.0
+make && make install
+cd ..
+rm -rf batctl-2014.2.0*
+#
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/alfred-2014.2.0.tar.gz
+tar -xvzf alfred-2014.2.0.tar.gz
+cd alfred-2014.2.0
+make && make install
+cd ..
+rm -rf alfred-2014.2.0* 
+EOF
+}
+
+
+cd $WORKDIR
+dotask branch_image ../$OUTDIR/stage4.$IMGFORMAT $CURIMG
+dotask run_qemu $CURIMG
+dotask mount_apt_cache
+dotask disable_starting_services
+dotask build_batman
+dotask save_space_using_hardlink
+dotask allow_starting_services
+dotask update_issue
+dotask fingerprint_debian
+dotask shutdown_qemu
+dotask finish_image
