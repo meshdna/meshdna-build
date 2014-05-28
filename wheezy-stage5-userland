@@ -21,6 +21,7 @@ sed -i 's/depmod\ \-a/depmod 3.12.20\+/' Makefile
 make && make install
 cd ..
 rm -rf batman-adv-2014.2.0*
+echo "batman-adv" >> /etc/modules
 # 
 wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
 tar -xvzf batctl-2014.2.0*
@@ -35,6 +36,12 @@ cd alfred-2014.2.0
 make && make install
 cd ..
 rm -rf alfred-2014.2.0* 
+EOF
+}
+
+cleanup_ipv6() {
+  onvm_chroot sh -l -e - <<\EOF
+rm /etc/modprobe.d/ipv6.conf
 EOF
 }
 
@@ -65,8 +72,9 @@ dotask branch_image ../$OUTDIR/stage4.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
 dotask mount_apt_cache
 dotask disable_starting_services
-#dotask build_batman
+dotask build_batman
 dotask build_rt5572sta
+dotask cleanup_ipv6
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
