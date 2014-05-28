@@ -52,6 +52,10 @@ sed -i "s/uname\ \-r/echo\ 3\.12\.20\+/" os/linux/Makefile.6
 make && make install
 cd ..
 rm -rf DPO_RT5572_LinuxSTA_2.6.1.3_20121022*
+echo "blacklist rt2800usb" >> /etc/modprobe.d/rt.conf
+echo "blacklist rt2800lib" >> /etc/modprobe.d/rt.conf
+echo "blacklist rt2x00usb" >> /etc/modprobe.d/rt.conf
+echo "blacklist rt2x00lib" >> /etc/modprobe.d/rt.conf
 EOF
 }
 
