@@ -45,6 +45,10 @@ build_rt5572sta() {
 curl -O 192.168.1.129/etc/meshnet/drivers/DPO_RT5572_LinuxSTA_2.6.1.3_20121022.tar.bz2
 tar -xvjf DPO_RT5572_LinuxSTA_2.6.1.3_20121022.tar.bz2
 cd DPO_RT5572_LinuxSTA_2.6.1.3_20121022
+# Slightly less evil patching because this makefile looks like a pigs ass
+sed -i "s/uname\ \-r/echo\ 3\.12\.20\+/" Makefile
+sed -i "s/uname\ \-r/echo\ 3\.12\.20\+/" os/linux/Makefile.4
+sed -i "s/uname\ \-r/echo\ 3\.12\.20\+/" os/linux/Makefile.6
 make && make install
 cd ..
 rm -rf DPO_RT5572_LinuxSTA_2.6.1.3_20121022*
