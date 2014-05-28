@@ -40,8 +40,14 @@ EOF
 
 # build some wireless drivers we would like to have
 build_rt5572sta() {
-  ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
-curl 
+  onvm_chroot sh -l -e - <<\EOF
+# MORE EVIL CURLS FROM LOCAL IP
+curl 192.168.1.129/etc/meshnet/drivers/DPO_RT5572_LinuxSTA_2.6.1.3_20121022.tar.bz2
+tar -xvjf DPO_RT5572_LinuxSTA_2.6.1.3_20121022.tar.bz2
+cd DPO_RT5572_LinuxSTA_2.6.1.3_20121022
+make && make install
+cd ..
+rm -rf DPO_RT5572_LinuxSTA_2.6.1.3_20121022*
 EOF
 }
 
@@ -51,7 +57,8 @@ dotask branch_image ../$OUTDIR/stage4.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
 dotask mount_apt_cache
 dotask disable_starting_services
-dotask build_batman
+#dotask build_batman
+dotask build_rt5572sta
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
