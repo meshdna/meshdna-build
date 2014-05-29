@@ -47,6 +47,26 @@ rm /etc/modprobe.d/ipv6.conf
 EOF
 }
 
+cleanup_wireless_defaults() {
+  onvm_chroot sh -l -e - <<\EOF
+# /etc/default/ifplugd
+# sed to replace defaults with following
+# ifplugd for all interfaces being present.
+# INTERFACES=""
+# HOTPLUG_INTERFACES="eth0"
+
+# REALTEK DEFAULTS:
+#  doesnt give a shit about dhcp/ifplugd/wpa_supplicant
+#  interface needs to be UP in ifconfig to set mode
+# RALINK defaults:
+#  shits given about wpa_supplicant/ifplugd/etc
+#  interface needs to be DOWN in ifconfig to set mode
+
+# remove wpa_supplicant from /etc/network/if-* 
+
+EOF
+}
+
 # build some wireless drivers we would like to have
 #build_rt5572sta() {
 #  onvm_chroot sh -l -e - <<\EOF
@@ -77,6 +97,7 @@ dotask disable_starting_services
 dotask build_batman
 #dotask build_rt5572sta
 dotask cleanup_ipv6
+dotask cleanup_wireless_defaults
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
