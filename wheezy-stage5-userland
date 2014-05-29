@@ -24,6 +24,8 @@ rm -rf batman-adv-2014.2.0*
 echo "batman-adv" >> /etc/modules
 # 
 wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
+# remove me on next full rebuild
+apt-get install libnl-3-dev
 tar -xvzf batctl-2014.2.0*
 cd batctl-2014.2.0
 make && make install
