@@ -31,6 +31,7 @@ cd linux
 make mrproper
 # EVIL INTERNAL IP ADDRESS CURL
 curl 192.168.1.129/etc/meshnet/config.gz | gunzip > .config
+curl http://downloads.meshdna.org/config.gz | gunzip > .config
 make oldconfig
 make && make modules
 cp arch/arm/boot/Image /boot/kernel.img
