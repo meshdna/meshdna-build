@@ -54,6 +54,9 @@ cleanup_wireless_defaults() {
 # ifplugd for all interfaces being present.
 # INTERFACES=""
 # HOTPLUG_INTERFACES="eth0"
+sed -i '/INTERFACES/d' /etc/default/ifplugd
+echo "INTERFACES=\"\" 
+HOTPLUG_INTERFACES=\"eth0\"" > /etc/default/ifplugd
 
 # REALTEK DEFAULTS:
 #  doesnt give a shit about dhcp/ifplugd/wpa_supplicant
@@ -63,6 +66,7 @@ cleanup_wireless_defaults() {
 #  interface needs to be DOWN in ifconfig to set mode
 
 # remove wpa_supplicant from /etc/network/if-* 
+rm -rf wpasupplicant /etc/network/if*/
 
 EOF
 }
