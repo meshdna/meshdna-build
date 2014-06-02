@@ -9,6 +9,12 @@ set -ex
 
 CURIMG=stage6.$IMGFORMAT
 
+install_packages() {
+  onvm_chroot sh -l -ex - <<\EOF
+apt-get install -y iw
+EOF
+{
+
 cleanup_wireless_defaults() {
   onvm_chroot sh -l -ex - <<\EOF
 # /etc/default/ifplugd
@@ -36,6 +42,7 @@ dotask branch_image ../$OUTDIR/stage5.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
 dotask mount_apt_cache
 dotask disable_starting_services
+dotask install_packages
 dotask cleanup_wireless_defaults
 dotask save_space_using_hardlink
 dotask allow_starting_services
