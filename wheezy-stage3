@@ -44,7 +44,7 @@ tzdata	tzdata/Zones/Etc	select	UTC
 console-setup   console-setup/store_defaults_in_debconf_db      boolean true
 # Font for the console:
 # Choices: Fixed, Terminus, TerminusBold, TerminusBoldVGA, VGA, Do not change the boot/kernel font
-console-setup	console-setup/fontface47	select	Do not change the boot/kernel font
+console-setup	console-setup/fontface47	select  Terminus	
 # Enable subpixel rendering for screen:
 # Choices: Automatic, Always, Never
 fontconfig-config	fontconfig/subpixel_rendering	select	Automatic
