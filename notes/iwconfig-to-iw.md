@@ -31,7 +31,7 @@ iw dev wlan0 set type ibss
 
 Join an ibss mesh network:
 ```bash
-iw dev wlan0 ibss join lbmeshnet 2437 HT40+ 02:12:34:56:78:9a
+iw dev wlan0 ibss join meshdna 2437 HT40+ 02:12:34:56:78:9a
 ```
 
 In summary:
@@ -43,4 +43,3 @@ interface up         | ifconfig wlan0 up          | ip link set wlan0 up
 interface status     | ifconfig                   | ip link _or_ ip status
 wireless scan        | iwlist wlan0 scan          | iw dev wlan0 scan
 change wireless mode | iwconfig wlan0 mode ad-hoc | iw dev wlan0 set type ibss
-
