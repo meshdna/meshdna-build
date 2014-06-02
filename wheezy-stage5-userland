@@ -9,6 +9,14 @@ set -ex
 
 CURIMG=stage5.$IMGFORMAT
 
+install_packages() {
+  ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
+apt-get install libnl-3-dev -y
+apt-get install screen -y
+apt-get install tmux -y 
+EOF
+}
+
 build_batman() {
   # we may want to break out DEBIAN_FRONTEND=noninteractive
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
@@ -25,7 +33,6 @@ echo "batman-adv" >> /etc/modules
 # 
 wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
 # remove me on next full rebuild
-apt-get install libnl-3-dev
 tar -xvzf batctl-2014.2.0*
 cd batctl-2014.2.0
 make && make install
@@ -52,6 +59,7 @@ dotask branch_image ../$OUTDIR/stage4.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
 dotask mount_apt_cache
 dotask disable_starting_services
+dotask install_packages
 dotask build_batman
 dotask cleanup_ipv6
 dotask save_space_using_hardlink
