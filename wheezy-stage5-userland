@@ -42,32 +42,8 @@ EOF
 }
 
 cleanup_ipv6() {
-  onvm_chroot sh -l -e - <<\EOF
+  onvm_chroot sh -l -ex - <<\EOF
 rm /etc/modprobe.d/ipv6.conf
-EOF
-}
-
-cleanup_wireless_defaults() {
-  onvm_chroot sh -l -e - <<\EOF
-# /etc/default/ifplugd
-# sed to replace defaults with following
-# ifplugd for all interfaces being present.
-# INTERFACES=""
-# HOTPLUG_INTERFACES="eth0"
-sed -i '/INTERFACES/d' /etc/default/ifplugd
-echo "INTERFACES=\"\" 
-HOTPLUG_INTERFACES=\"eth0\"" > /etc/default/ifplugd
-
-# REALTEK DEFAULTS:
-#  doesnt give a shit about dhcp/ifplugd/wpa_supplicant
-#  interface needs to be UP in ifconfig to set mode
-# RALINK defaults:
-#  shits given about wpa_supplicant/ifplugd/etc
-#  interface needs to be DOWN in ifconfig to set mode
-
-# remove wpa_supplicant from /etc/network/if-* 
-rm -rf wpasupplicant /etc/network/if*/
-
 EOF
 }
 
@@ -78,7 +54,6 @@ dotask mount_apt_cache
 dotask disable_starting_services
 dotask build_batman
 dotask cleanup_ipv6
-dotask cleanup_wireless_defaults
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
