@@ -167,7 +167,6 @@ configure_wifi() {
   onvm_chroot sh -l -e - <<EOF
 cat <<\EOF1 >> /etc/network/interfaces
 
-allow-hotplug wlan0
 iface wlan0 inet manual
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 iface default inet dhcp
