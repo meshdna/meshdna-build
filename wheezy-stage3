@@ -287,8 +287,8 @@ EOF
 
 configure_ifplugd() {
   onvm_chroot sh -l -ex - <<\EOF
-sed /etc/default/ifplugd -i -e 's/^INTERFACES.*/INTERFACES="auto"/'
-sed /etc/default/ifplugd -i -e 's/^HOTPLUG_INTERFACES.*/HOTPLUG_INTERFACES="all"/'
+sed /etc/default/ifplugd -i -e 's/^INTERFACES.*/INTERFACES=""/'
+sed /etc/default/ifplugd -i -e 's/^HOTPLUG_INTERFACES.*/HOTPLUG_INTERFACES="eth0"/'
 EOF
 }
 
