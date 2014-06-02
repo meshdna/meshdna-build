@@ -18,7 +18,7 @@ cleanup_wireless_defaults() {
 # HOTPLUG_INTERFACES="eth0"
 #sed -i '/INTERFACES/d' /etc/default/ifplugd
 #echo "INTERFACES=\"\" 
-#HOTPLUG_INTERFACES=\"eth0\"" > /etc/default/ifplugd
+#HOTPLUG_INTERFACES=\"eth0\"" >> /etc/default/ifplugd
 #cat /etc/default/ifplugd
 
 # REALTEK DEFAULTS:
