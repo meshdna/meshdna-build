@@ -56,7 +56,7 @@ keyboard-configuration	keyboard-configuration/toggle	select	No toggling
 console-setup	console-setup/fontsize-text47	select	16
 # Locales to be generated:
 # Choices: <SNIP>
-locales	locales/locales_to_be_generated	multiselect	en_GB.UTF-8 UTF-8
+locales	locales/locales_to_be_generated	multiselect	en_US.UTF-8 UTF-8
 # Keyboard model:
 # Choices: <SNIP>
 keyboard-configuration	keyboard-configuration/model	select	Generic 105-key (Intl) PC
@@ -73,7 +73,7 @@ keyboard-configuration  keyboard-configuration/layout select English (US)
 keyboard-configuration  keyboard-configuration/layoutcode string us
 # Keymap to use:
 # Choices: <SNIP>
-keyboard-configuration	keyboard-configuration/xkb-keymap	select	British English
+keyboard-configuration	keyboard-configuration/xkb-keymap	select us	
 # Choices: English (UK), English (UK) - English (UK\, Colemak), English (UK) - English (UK\, Dvorak), English (UK) - English (UK\, Dvorak with UK punctuation), English (UK) - English (UK\, extended WinKeys), English (UK) - English (UK\, international with dead keys), English (UK) - English (UK\, Macintosh), English (UK) - English (UK\, Macintosh international), Other
 keyboard-configuration  keyboard-configuration/variant select English (UK)
 # Geographic area:
