@@ -12,14 +12,11 @@ CURIMG=stage6.$IMGFORMAT
 cleanup_wireless_defaults() {
   onvm_chroot sh -l -ex - <<\EOF
 # /etc/default/ifplugd
-# sed to replace defaults with following
-# ifplugd for all interfaces being present.
-# INTERFACES=""
-# HOTPLUG_INTERFACES="eth0"
-#sed -i '/INTERFACES/d' /etc/default/ifplugd
-#echo "INTERFACES=\"\" 
-#HOTPLUG_INTERFACES=\"eth0\"" >> /etc/default/ifplugd
-#cat /etc/default/ifplugd
+# replace defualt interfaces and hotplug interfaces
+sed -i '/^INTERFACES/d' /etc/default/ifplugd
+sed -i '/^HOTPLUG_INTERFACES/d' /etc/default/ifplugd
+echo "INTERFACES=\"\" 
+HOTPLUG_INTERFACES=\"eth0\"" >> /etc/default/ifplugd
 
 # REALTEK DEFAULTS:
 #  doesnt give a shit about dhcp/ifplugd/wpa_supplicant
@@ -29,8 +26,7 @@ cleanup_wireless_defaults() {
 #  interface needs to be DOWN in ifconfig to set mode
 
 # remove wpa_supplicant from /etc/network/if-* 
-#rm -vrf wpasupplicant /etc/network/if*/
-#find /etc/network/if*/
+find /etc/network/if-* -name 'wpasupplicant' -exec rm -v {} \;
 
 EOF
 }
