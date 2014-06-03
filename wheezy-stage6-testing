@@ -38,6 +38,42 @@ find /etc/network/if-* -name 'wpasupplicant' -exec rm -v {} \;
 EOF
 }
 
+add_meshdna_init_script() {
+# This script is in need of some serious love
+  onvm_chroot sh -l -ex - <<\EOF
+cat <<\EOF1 > /etc/init.d/meshdna
+#!/bin/bash
+# /etc/init.d/meshdna
+
+# The following part carries out specific functions depending on arguments.
+case "$1" in
+  start)
+    echo -ne "Starting meshdna... "
+    ip link set wlan0 up
+    iw dev wlan0 ibss join meshdna 2437 HT40+ 02:12:34:56:78:9a
+    batctl if add wlan0
+    ip link set bat0 up
+    echo -e "Done!\r"
+    ;;
+  stop)
+    echo -ne "Stopping meshdna... "
+    ip link set bat0 down
+    batctl if del wlan0
+    ip link set wlan0 down
+    echo -e "Done!\r"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/meshdna {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+EOF1
+update-rc.d meshdna defaults
+EOF
+}
+
 cd $WORKDIR
 dotask branch_image ../$OUTDIR/stage5.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
@@ -45,6 +81,7 @@ dotask mount_apt_cache
 dotask disable_starting_services
 dotask install_packages
 dotask cleanup_wireless_defaults
+dotask add_meshdna_init_script
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
