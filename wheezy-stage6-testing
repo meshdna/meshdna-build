@@ -71,6 +71,7 @@ esac
 
 exit 0
 EOF1
+chmod +x /etc/init.d/meshdna
 update-rc.d meshdna defaults
 EOF
 }
