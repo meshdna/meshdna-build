@@ -13,7 +13,7 @@ install_packages() {
   onvm_chroot sh -l -ex - <<\EOF
 apt-get install -y iw
 EOF
-{
+}
 
 cleanup_wireless_defaults() {
   onvm_chroot sh -l -ex - <<\EOF
