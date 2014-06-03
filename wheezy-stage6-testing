@@ -44,6 +44,7 @@ add_meshdna_init_script() {
 cat <<\EOF1 > /etc/init.d/meshdna
 #!/bin/bash
 # /etc/init.d/meshdna
+export PATH=$PATH:/usr/local/bin:/usr/local/sbin
 
 # The following part carries out specific functions depending on arguments.
 case "$1" in
