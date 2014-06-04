@@ -50,6 +50,7 @@ export PATH=$PATH:/usr/local/bin:/usr/local/sbin
 case "$1" in
   start)
     echo -ne "Starting meshdna... "
+    iw dev wlan0 set type ibss
     ip link set wlan0 up
     iw dev wlan0 ibss join meshdna 2437 HT40+ 02:12:34:56:78:9a
     batctl if add wlan0
