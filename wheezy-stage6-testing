@@ -12,6 +12,7 @@ CURIMG=stage6.$IMGFORMAT
 install_packages() {
   onvm_chroot sh -l -ex - <<\EOF
 apt-get install -y iw
+apt-get install -y vim
 EOF
 }
 
