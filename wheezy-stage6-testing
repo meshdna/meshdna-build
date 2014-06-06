@@ -76,6 +76,82 @@ update-rc.d meshdna defaults
 EOF
 }
 
+
+add_alfred_init_script() {
+# This script is in need of some serious love
+  onvm_chroot sh -l -ex - <<\EOF
+cat <<\EOF1 > /etc/init.d/alfred
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        alfred
+# Required-Start:  $network $remote_fs $syslog
+# Required-Stop:   $network $remote_fs $syslog
+# Default-Start:   3 4 5
+# Default-Stop: 
+# Short-Description: Start Alfred
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin
+
+. /lib/lsb/init-functions
+
+DAEMON=/usr/local/sbin/alfred
+PIDFILE=/var/run/alfred.pid
+
+test -x $DAEMON || exit 5
+
+LOCKFILE=/var/lock/alfred
+
+ALFREDOPTS="-i bat0 -m"
+
+lock_alfred() {
+  if [ -x /usr/bin/lockfile-create ]; then
+    lockfile-create $LOCKFILE
+    lockfile-touch $LOCKFILE &
+    LOCKTOUCHPID="$!"
+  fi
+}
+
+unlock_alfred() {
+  if [ -x /usr/bin/lockfile-create ] ; then
+    kill $LOCKTOUCHPID
+    lockfile-remove $LOCKFILE
+  fi
+}
+
+case $1 in
+  start)
+    log_daemon_msg "Starting A.L.F.R.E.D. daemon" "alfred"
+    lock_alfred
+      start-stop-daemon --start --quiet -b --exec $DAEMON -- $ALFREDOPTS;
+    status=$?
+    unlock_alfred
+    log_end_msg $status
+      ;;
+  stop)
+    log_daemon_msg "Stopping A.L.F.R.E.D. daemon" "alfred"
+      start-stop-daemon --stop --quiet --exec $DAEMON
+    log_end_msg $?
+    rm -f $PIDFILE
+      ;;
+  restart)
+    $0 stop && sleep 2 && $0 start
+      ;;
+  status)
+    status_of_proc $DAEMON "alfred server"
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|try-restart|force-reload|status}"
+    exit 2
+    ;;
+esac
+EOF1
+chmod +x /etc/init.d/alfred
+update-rc.d alfred defaults
+EOF
+}
+
 cd $WORKDIR
 dotask branch_image ../$OUTDIR/stage5.$IMGFORMAT $CURIMG
 dotask run_qemu $CURIMG
@@ -84,6 +160,7 @@ dotask disable_starting_services
 dotask install_packages
 dotask cleanup_wireless_defaults
 dotask add_meshdna_init_script
+dotask add_alfred_init_script
 dotask save_space_using_hardlink
 dotask allow_starting_services
 dotask update_issue
