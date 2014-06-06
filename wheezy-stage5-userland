@@ -18,6 +18,8 @@ apt-get install iw -y
 apt-get install vim -y
 apt-get install nuttcp -y
 apt-get install iperf -y
+apt-get install hostapd -y
+apt-get install bridge-utils -y
 EOF
 }
 
