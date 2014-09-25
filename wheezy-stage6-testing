@@ -16,14 +16,6 @@ EOF
 
 cleanup_wireless_defaults() {
   onvm_chroot sh -l -ex - <<\EOF
-########### REMOVE ME AFTER REBUILDING STAGE 3 ############
-# replace defualt interfaces and hotplug interfaces
-sed -i '/^INTERFACES/d' /etc/default/ifplugd
-sed -i '/^HOTPLUG_INTERFACES/d' /etc/default/ifplugd
-echo "INTERFACES=\"\" 
-HOTPLUG_INTERFACES=\"eth0\"" >> /etc/default/ifplugd
-###########################################################
-
 # REALTEK DEFAULTS:
 #  doesnt give a shit about dhcp/ifplugd/wpa_supplicant
 #  interface needs to be UP in ifconfig to set mode
