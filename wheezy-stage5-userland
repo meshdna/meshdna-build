@@ -8,6 +8,11 @@ set -ex
 . ./common
 
 CURIMG=stage5.$IMGFORMAT
+BATMAN_VERSION=2014.3.0
+KERNEL_VERSION=3.12.28\+
+
+## bash update can be removed after rebuild 
+# 2014 Sep 24
 
 install_packages() {
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
@@ -20,37 +25,38 @@ apt-get install nuttcp -y
 apt-get install iperf -y
 apt-get install hostapd -y
 apt-get install bridge-utils -y
+apt-get upgrade bash -y
 EOF
 }
 
 build_batman() {
   # we may want to break out DEBIAN_FRONTEND=noninteractive
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
-export KERNELPATH=/lib/modules/3.12.20+/build
-wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batman-adv-2014.2.0.tar.gz
-tar -xvzf batman-adv-2014.2.0.tar.gz
-cd batman-adv-2014.2.0
+export KERNELPATH=/lib/modules/$KERNEL_VERSION/build
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/batman-adv-$BATMAN_VERSION.tar.gz
+tar -xvzf batman-adv-$BATMAN_VERSION.tar.gz
+cd batman-adv-$BATMAN_VERSION
 # EVIL MAKEFILE PATCHING
-sed -i 's/depmod\ \-a/depmod 3.12.20\+/' Makefile
+sed -i 's/depmod\ \-a/depmod $KERNEL_VERSION/' Makefile
 make && make install
 cd ..
-rm -rf batman-adv-2014.2.0*
+rm -rf batman-adv-$BATMAN_VERSION
 echo "batman-adv" >> /etc/modules
 # 
-wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/batctl-2014.2.0.tar.gz
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/batctl-$BATMAN_VERSION.tar.gz
 # remove me on next full rebuild
-tar -xvzf batctl-2014.2.0*
-cd batctl-2014.2.0
+tar -xvzf batctl-$BATMAN_VERSION.tar.gz
+cd batctl-$BATMAN_VERSION
 make && make install
 cd ..
-rm -rf batctl-2014.2.0*
+rm -rf batctl-$BATMAN_VERSION
 #
-wget http://downloads.open-mesh.org/batman/releases/batman-adv-2014.2.0/alfred-2014.2.0.tar.gz
-tar -xvzf alfred-2014.2.0.tar.gz
-cd alfred-2014.2.0
+wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/alfred-$BATMAN_VERSION.tar.gz
+tar -xvzf alfred-$BATMAN_VERSION.tar.gz
+cd alfred-$BATMAN_VERSION
 make && make install
 cd ..
-rm -rf alfred-2014.2.0* 
+rm -rf alfred-$BATMAN_VERSION
 EOF
 }
 
