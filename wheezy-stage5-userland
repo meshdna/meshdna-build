@@ -32,15 +32,15 @@ EOF
 build_batman() {
   # we may want to break out DEBIAN_FRONTEND=noninteractive
   ssh_in_to_qemu chroot /mnt sh -l -ex - <<EOF
-export KERNELPATH=/lib/modules/$KERNEL_VERSION/build
-wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/batman-adv-$BATMAN_VERSION.tar.gz
-tar -xvzf batman-adv-$BATMAN_VERSION.tar.gz
-cd batman-adv-$BATMAN_VERSION
+#export KERNELPATH=/lib/modules/$KERNEL_VERSION/build
+#wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/batman-adv-$BATMAN_VERSION.tar.gz
+#tar -xvzf batman-adv-$BATMAN_VERSION.tar.gz
+#cd batman-adv-$BATMAN_VERSION
 # EVIL MAKEFILE PATCHING
-sed -i 's/depmod\ \-a/depmod $KERNEL_VERSION/' Makefile
-make && make install
-cd ..
-rm -rf batman-adv-$BATMAN_VERSION
+#sed -i 's/depmod\ \-a/depmod $KERNEL_VERSION/' Makefile
+#make && make install
+#cd ..
+#rm -rf batman-adv-$BATMAN_VERSION
 echo "batman-adv" >> /etc/modules
 # 
 wget http://downloads.open-mesh.org/batman/releases/batman-adv-$BATMAN_VERSION/batctl-$BATMAN_VERSION.tar.gz
